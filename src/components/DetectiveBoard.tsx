@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { User, MapPin, Camera, AlertCircle, Search } from "lucide-react";
 
-interface NodeItem {
+export interface NodeItem {
   id: string;
   title: string;
   type: "suspect" | "location" | "clue";

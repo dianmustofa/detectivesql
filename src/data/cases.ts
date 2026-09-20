@@ -52,7 +52,7 @@ export const CASES_DATA: Case[] = [
         question: "Tampilkan SEMUA kolom dan baris dari tabel 'pengunjung'.",
         hint: "Gunakan perintah SELECT * FROM pengunjung;",
         targetCount: 5,
-        validator: (res) =>
+        validator: (res: unknown[]) =>
           Array.isArray(res) &&
           res.length === 5 &&
           res[0] !== null &&
@@ -68,7 +68,7 @@ export const CASES_DATA: Case[] = [
           "Tampilkan pengunjung yang 'jam_masuk' nya di atas jam '19:00'.",
         hint: "Gunakan klausa WHERE jam_masuk > '19:00'",
         targetCount: 2,
-        validator: (res) =>
+        validator: (res: unknown[]) =>
           Array.isArray(res) &&
           res.length === 2 &&
           res.every(
@@ -88,7 +88,7 @@ export const CASES_DATA: Case[] = [
           "Tampilkan data dari 'log_cctv' yang plat_nomor nya mengandung 'B 9999'.",
         hint: "Gunakan WHERE plat_nomor LIKE 'B 9999%'",
         targetCount: 1,
-        validator: (res: unknown) => {
+        validator: (res: unknown[]) => {
           if (!Array.isArray(res) || res.length !== 1) return false;
 
           const item = res[0];
@@ -128,7 +128,7 @@ export const CASES_DATA: Case[] = [
           "Tampilkan total nominal (SUM) transaksi yang dikirim ke 'akun_tujuan' = 'ACC-999'.",
         hint: "SELECT SUM(nominal) FROM transaksi WHERE akun_tujuan = 'ACC-999';",
         targetCount: 1,
-        validator: (res) => {
+        validator: (res: unknown[]) => {
           if (
             !Array.isArray(res) ||
             res.length === 0 ||
