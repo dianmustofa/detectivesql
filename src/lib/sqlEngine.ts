@@ -4,13 +4,10 @@ let db: Database | null = null;
 
 export interface QueryResult {
   success: boolean;
-  data: Record<string, any>[];
+  data: Record<string, unknown>[];
   error?: string;
 }
 
-/**
- * Inisialisasi Database SQLite WASM & Seed Data
- */
 export async function initializeDatabase(
   seedQueries: string[] = []
 ): Promise<QueryResult> {
@@ -28,19 +25,17 @@ export async function initializeDatabase(
     }
 
     return { success: true, data: [] };
-  } catch (err: any) {
-    console.error("Failed to initialize SQLite WASM:", err);
+  } catch (err: unknown) {
+    const error = err as Error;
+    console.error("Failed to initialize SQLite WASM:", error);
     return {
       success: false,
       data: [],
-      error: err?.message || "Gagal memuat SQLite WASM.",
+      error: error?.message || "Gagal memuat SQLite WASM.",
     };
   }
 }
 
-/**
- * Eksekusi Kueri SQL dan kembalikan Array of Objects
- */
 export function executeQuery(sql: string): QueryResult {
   if (!db) {
     return {
@@ -63,8 +58,8 @@ export function executeQuery(sql: string): QueryResult {
     }
 
     const { columns, values } = execResults[0];
-    const formattedData: Record<string, any>[] = values.map((row) => {
-      const obj: Record<string, any> = {};
+    const formattedData: Record<string, unknown>[] = values.map((row) => {
+      const obj: Record<string, unknown> = {};
       columns.forEach((colName, index) => {
         obj[colName] = row[index];
       });
@@ -72,11 +67,12 @@ export function executeQuery(sql: string): QueryResult {
     });
 
     return { success: true, data: formattedData };
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const error = err as Error;
     return {
       success: false,
       data: [],
-      error: err?.message || "Terjadi kesalahan sintaks/eksekusi SQL.",
+      error: error?.message || "Terjadi kesalahan sintaks/eksekusi SQL.",
     };
   }
 }

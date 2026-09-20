@@ -10,7 +10,6 @@ import {
   Play,
   Database,
   Table as TableIcon,
-  LayoutGrid,
   RotateCcw,
   CheckCircle2,
   Lock,
@@ -27,6 +26,7 @@ import {
   Columns,
   Layers,
   Terminal,
+  LayoutGrid,
 } from "lucide-react";
 
 import { initializeDatabase, executeQuery } from "@/lib/sqlEngine";
@@ -207,7 +207,7 @@ const CASES_DATA = [
   },
 ];
 
-export default function SQLDetectivePastelBlueOrangePage() {
+export default function SQLDetectivePage() {
   const [currentCaseIndex, setCurrentCaseIndex] = useState(0);
   const currentCase = CASES_DATA[currentCaseIndex];
 
@@ -215,7 +215,7 @@ export default function SQLDetectivePastelBlueOrangePage() {
   const [initError, setInitError] = useState<string | null>(null);
 
   const [sqlQuery, setSqlQuery] = useState("");
-  const [queryResult, setQueryResult] = useState<Record<string, any>[]>([]);
+  const [queryResult, setQueryResult] = useState<Record<string, unknown>[]>([]);
   const [queryColumns, setQueryColumns] = useState<string[]>([]);
   const [executionError, setExecutionError] = useState<string | null>(null);
   const [executionSuccess, setExecutionSuccess] = useState(false);
@@ -246,6 +246,7 @@ export default function SQLDetectivePastelBlueOrangePage() {
       }
     }
     setupDB();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentCaseIndex]);
 
   const toggleHint = (id: number) => {
@@ -278,7 +279,10 @@ export default function SQLDetectivePastelBlueOrangePage() {
     }
   };
 
-  const checkUnlockProgress = (query: string, resultData: any[]) => {
+  const checkUnlockProgress = (
+    query: string,
+    resultData: Record<string, unknown>[]
+  ) => {
     const cleanQuery = query.toLowerCase();
     let newlyUnlockedTitle: string | null = null;
 
@@ -348,7 +352,6 @@ export default function SQLDetectivePastelBlueOrangePage() {
 
   return (
     <div className="min-h-screen bg-[#f8fafc] text-slate-700 flex flex-col font-sans relative selection:bg-orange-100 selection:text-orange-900">
-      {/* Header (Putih & Akses Pastel Biru) */}
       <header className="border-b border-sky-100 bg-white/90 backdrop-blur-md px-4 sm:px-6 py-3.5 flex items-center justify-between sticky top-0 z-30 shadow-xs">
         <div className="flex items-center gap-3">
           <div className="p-2.5 bg-sky-50 border border-sky-200/60 rounded-2xl text-sky-500 shadow-2xs">
@@ -384,11 +387,8 @@ export default function SQLDetectivePastelBlueOrangePage() {
         </div>
       </header>
 
-      {/* Main Layout */}
       <main className="flex-1 p-3 sm:p-6 grid grid-cols-1 lg:grid-cols-12 gap-5 max-w-7xl mx-auto w-full">
-        {/* Kolom Kiri: Skema Tabel, Terminal SQL & Misi */}
         <div className="lg:col-span-5 flex flex-col gap-4">
-          {/* STRUCTUR DATABASE / SKEMA TABEL (Pastel Orange Accent) */}
           <div className="bg-orange-50/40 border border-orange-200/60 rounded-2xl p-4 flex flex-col gap-3 shadow-2xs">
             <div className="flex items-center justify-between border-b border-orange-200/40 pb-2.5">
               <div className="flex items-center gap-2">
@@ -435,7 +435,6 @@ export default function SQLDetectivePastelBlueOrangePage() {
             </div>
           </div>
 
-          {/* TERMINAL SQL (Pastel Blue Accent) */}
           <div className="bg-white border border-sky-100 rounded-2xl p-4 flex flex-col gap-3 shadow-xs">
             <div className="flex justify-between items-center border-b border-slate-100 pb-2">
               <label className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-2">
@@ -491,7 +490,6 @@ export default function SQLDetectivePastelBlueOrangePage() {
             </div>
           </div>
 
-          {/* CATATAN INVESTIGASI / MISI */}
           <div className="bg-sky-50/50 border border-sky-100 rounded-2xl p-4 flex flex-col gap-3">
             <div className="flex items-center gap-2 border-b border-sky-100 pb-2">
               <BookOpen className="w-4 h-4 text-sky-500" />
@@ -560,7 +558,6 @@ export default function SQLDetectivePastelBlueOrangePage() {
           </div>
         </div>
 
-        {/* Kolom Kanan: Papan Bukti & Hasil Tabel */}
         <div className="lg:col-span-7 flex flex-col gap-4">
           <div className="flex justify-between items-center bg-white p-1.5 rounded-2xl border border-slate-200/80 shadow-2xs">
             <div className="flex gap-1 w-full sm:w-auto">
@@ -601,7 +598,6 @@ export default function SQLDetectivePastelBlueOrangePage() {
                 </span>
               </div>
 
-              {/* Area Papan Gambar / Canvas Canvas */}
               <div className="relative w-full h-[360px] sm:h-[450px] bg-slate-50/80 rounded-xl border border-slate-200/70 overflow-hidden">
                 <div
                   className="absolute inset-0 opacity-25 pointer-events-none"
@@ -766,7 +762,6 @@ export default function SQLDetectivePastelBlueOrangePage() {
         </div>
       </main>
 
-      {/* MODAL VICTORY (Pastel Orange & White) */}
       {isCaseCompleted && (
         <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-50 flex items-center justify-center p-4 animate-fadeIn">
           <div className="bg-white border border-orange-100 rounded-3xl p-6 max-w-md w-full shadow-2xl flex flex-col items-center text-center gap-4 relative overflow-hidden">

@@ -5,7 +5,7 @@ export interface Level {
   question: string;
   hint: string;
   targetCount: number;
-  validator: (data: any[]) => boolean;
+  validator: (data: unknown[]) => boolean;
 }
 
 export interface Case {
@@ -55,8 +55,9 @@ export const CASES_DATA: Case[] = [
         validator: (res) =>
           Array.isArray(res) &&
           res.length === 5 &&
-          res[0] &&
-          res[0].nama !== undefined,
+          res[0] !== null &&
+          typeof res[0] === "object" &&
+          "nama" in (res[0] as Record<string, unknown>),
       },
       {
         id: 2,
@@ -70,7 +71,13 @@ export const CASES_DATA: Case[] = [
         validator: (res) =>
           Array.isArray(res) &&
           res.length === 2 &&
-          res.every((r: any) => r.jam_masuk > "19:00"),
+          res.every(
+            (r) =>
+              r &&
+              typeof r === "object" &&
+              "jam_masuk" in r &&
+              String((r as Record<string, unknown>).jam_masuk) > "19:00"
+          ),
       },
       {
         id: 3,
@@ -81,11 +88,18 @@ export const CASES_DATA: Case[] = [
           "Tampilkan data dari 'log_cctv' yang plat_nomor nya mengandung 'B 9999'.",
         hint: "Gunakan WHERE plat_nomor LIKE 'B 9999%'",
         targetCount: 1,
-        validator: (res) =>
-          Array.isArray(res) &&
-          res.length === 1 &&
-          res[0].plat_nomor &&
-          String(res[0].plat_nomor).includes("B 9999"),
+        validator: (res: unknown) => {
+          if (!Array.isArray(res) || res.length !== 1) return false;
+
+          const item = res[0];
+          if (typeof item !== "object" || item === null) return false;
+
+          const row = item as Record<string, unknown>;
+          return (
+            typeof row.plat_nomor === "string" &&
+            row.plat_nomor.includes("B 9999")
+          );
+        },
       },
     ],
   },
@@ -114,10 +128,19 @@ export const CASES_DATA: Case[] = [
           "Tampilkan total nominal (SUM) transaksi yang dikirim ke 'akun_tujuan' = 'ACC-999'.",
         hint: "SELECT SUM(nominal) FROM transaksi WHERE akun_tujuan = 'ACC-999';",
         targetCount: 1,
-        validator: (res) =>
-          Array.isArray(res) &&
-          res.length > 0 &&
-          (Object.values(res[0])[0] === 245000 || res[0].total === 245000),
+        validator: (res) => {
+          if (
+            !Array.isArray(res) ||
+            res.length === 0 ||
+            !res[0] ||
+            typeof res[0] !== "object"
+          ) {
+            return false;
+          }
+          const row = res[0] as Record<string, unknown>;
+          const val = Object.values(row)[0];
+          return val === 245000 || row.total === 245000;
+        },
       },
     ],
   },

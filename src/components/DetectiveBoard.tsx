@@ -8,13 +8,13 @@ interface NodeItem {
   title: string;
   type: "suspect" | "location" | "clue";
   details: string;
-  x: number; // posisi X (%) di papan
-  y: number; // posisi Y (%) di papan
+  x: number;
+  y: number;
   status?: "cleared" | "suspicious" | "target";
 }
 
 interface DetectiveBoardProps {
-  data: any[]; // Data hasil kueri SQL pengguna
+  data: Record<string, unknown>[];
   onNodeClick?: (item: NodeItem) => void;
 }
 
@@ -24,8 +24,6 @@ export default function DetectiveBoard({
 }: DetectiveBoardProps) {
   const [selectedNode, setSelectedNode] = useState<NodeItem | null>(null);
 
-  // Mapped items dari data SQL atau state bawaan
-  // Contoh mockup node papan detektif
   const nodes: NodeItem[] = [
     {
       id: "1",
@@ -67,7 +65,6 @@ export default function DetectiveBoard({
 
   return (
     <div className="w-full bg-[#2b1d0c] p-4 rounded-xl shadow-2xl border-4 border-[#1e1307] relative overflow-hidden">
-      {/* Texture Corkboard / Papan Gabus Header */}
       <div className="flex justify-between items-center mb-4 pb-2 border-b border-amber-900/50">
         <h2 className="text-xl font-bold text-amber-200 tracking-wider flex items-center gap-2">
           <Search className="w-5 h-5 text-amber-400" /> PAPAN INVESTIGASI KASUS
@@ -77,9 +74,7 @@ export default function DetectiveBoard({
         </span>
       </div>
 
-      {/* Area Papan Gabus */}
       <div className="relative w-full h-[450px] bg-[#3a2818] rounded-lg border border-amber-900/80 shadow-inner overflow-hidden">
-        {/* Pola Latar Belakang Papan */}
         <div
           className="absolute inset-0 opacity-15 pointer-events-none"
           style={{
@@ -88,9 +83,7 @@ export default function DetectiveBoard({
           }}
         />
 
-        {/* SVG Benang Merah (Kawat Penghubung Detektif) */}
         <svg className="absolute inset-0 w-full h-full pointer-events-none z-0">
-          {/* Garis penghubung antara Node 1 & Node 2 */}
           <line
             x1="20%"
             y1="25%"
@@ -101,7 +94,6 @@ export default function DetectiveBoard({
             strokeDasharray="5,5"
             className="animate-pulse"
           />
-          {/* Garis penghubung antara Node 2 & Node 3 */}
           <line
             x1="50%"
             y1="20%"
@@ -110,7 +102,6 @@ export default function DetectiveBoard({
             stroke="#ef4444"
             strokeWidth="2"
           />
-          {/* Garis penghubung antara Node 1 & Node 4 */}
           <line
             x1="20%"
             y1="25%"
@@ -122,7 +113,6 @@ export default function DetectiveBoard({
           />
         </svg>
 
-        {/* Render Node Kartu Bukti/Tersangka */}
         {nodes.map((item) => {
           const isSelected = selectedNode?.id === item.id;
 
@@ -138,10 +128,8 @@ export default function DetectiveBoard({
                 isSelected ? "scale-110 z-20" : ""
               }`}
             >
-              {/* Pin Merah di Atas Kartu */}
               <div className="w-3 h-3 bg-red-600 rounded-full border border-red-900 shadow-md mx-auto -mb-1 z-30 relative" />
 
-              {/* Kartu Catatan Kertas */}
               <div
                 className={`w-40 p-2.5 rounded shadow-lg backdrop-blur-sm text-xs font-sans transition-all border ${
                   item.status === "suspicious"
@@ -172,7 +160,6 @@ export default function DetectiveBoard({
         })}
       </div>
 
-      {/* Detail Modal / Panel Bawah saat Kartu Diklik */}
       {selectedNode && (
         <div className="mt-3 p-3 bg-amber-950/80 border border-amber-700/60 rounded-lg flex justify-between items-center text-amber-100 animate-fadeIn">
           <div className="flex items-center gap-3">
